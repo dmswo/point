@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/point?serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: dmswo
+
+  security:
+    user:
+      name: user
+      password: 1234
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+server:
+  port: 8082
