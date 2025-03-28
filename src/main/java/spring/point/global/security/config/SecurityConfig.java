@@ -11,10 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import spring.point.global.security.jwt.CustomFilterExceptionHandler;
-import spring.point.global.security.jwt.DefaultFilterResponseWriter;
-import spring.point.global.security.jwt.JwtAccessDeniedHandler;
-import spring.point.global.security.jwt.JwtAuthenticationEntryPoint;
+import spring.point.global.security.jwt.*;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +19,7 @@ import spring.point.global.security.jwt.JwtAuthenticationEntryPoint;
 public class SecurityConfig {
 
     private final DefaultFilterResponseWriter defaultFilterResponseWriter;
+    private final WorkApiKeyProperties workApiKeyProperties;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -36,13 +34,13 @@ public class SecurityConfig {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
-                                .requestMatchers("/api/v1/point/user/**").permitAll()
                                 .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new CustomFilterExceptionHandler(defaultFilterResponseWriter), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new AuthorizationFilter(workApiKeyProperties), CustomFilterExceptionHandler.class)
                 .headers(
                         headersConfigurer ->
                                 headersConfigurer

@@ -14,5 +14,11 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+authorization:
+  work-point:
+    x-api-key-header: X-API-KEY
+    x-api-key-value: dasdlkdjfkdlsjailskdjfkdl
+
 server:
   port: 8082
