@@ -20,7 +20,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(workApiKeyProperties.getXApiKeyHeader());
-        System.out.println(workApiKeyProperties.getXApiKeyValue());
+        String xApiKeyHeader = workApiKeyProperties.getXApiKeyHeader();
+        String xApiKeyValue = workApiKeyProperties.getXApiKeyValue();
+        if (request.getHeader(xApiKeyHeader).equals(xApiKeyValue)) {
+            filterChain.doFilter(request, response);
+        }
     }
 }
